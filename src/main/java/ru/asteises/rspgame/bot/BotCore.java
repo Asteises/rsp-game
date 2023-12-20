@@ -1,8 +1,6 @@
 package ru.asteises.rspgame.bot;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.asteises.rspgame.command.StartCommand;
+import ru.asteises.rspgame.handler.CommandHandler;
 
 import java.util.List;
 
@@ -18,9 +17,12 @@ import java.util.List;
 @Component
 public class BotCore extends TelegramLongPollingCommandBot {
 
+    private final CommandHandler commandHandler;
+
     //    public BotCore(@Value("${telegram.bot.token}") String botToken) {
 
-    public BotCore() {
+    public BotCore(CommandHandler commandHandler) {
+        this.commandHandler = commandHandler;
 //        super(botToken);
 
         register(new StartCommand("/start", "Start command"));
@@ -59,9 +61,17 @@ public class BotCore extends TelegramLongPollingCommandBot {
     // принимать апдейты в kafka
     @Override
     public void onUpdatesReceived(List<Update> updates) {
-        for (var up : updates) {
-            log.info("update: {}", up);
+        for (var update : updates) {
+            updateHandle(update);
         }
+    }
+
+    private void updateHandle(Update update) {
+        SendMessage result = new SendMessage();
+        if (update.getMessage().getText().startsWith("/")) {
+            result = commandHandler.handleCommands(update);
+        }
+        sendMessage(result);
     }
 
     private void sendMessage(SendMessage sendMessage) {
