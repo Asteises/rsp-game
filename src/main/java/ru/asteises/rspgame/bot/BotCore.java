@@ -1,6 +1,7 @@
 package ru.asteises.rspgame.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,6 +21,7 @@ public class BotCore extends TelegramLongPollingCommandBot {
 
     private final CommandHandler commandHandler;
     private final CallbackHandler callbackHandler;
+    private KafkaTemplate<String, Update> kafkaTemplate;
 
     //    public BotCore(@Value("${telegram.bot.token}") String botToken) {
 
