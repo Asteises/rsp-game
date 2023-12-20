@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.asteises.rspgame.mapper.PlayerMapper;
 import ru.asteises.rspgame.model.Player;
-import ru.asteises.rspgame.repository.PlayerRepository;
 import ru.asteises.rspgame.service.PlayerService;
 
 @Slf4j

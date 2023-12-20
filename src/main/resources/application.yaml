@@ -35,7 +35,13 @@ telegram:
 #    token: ${BOT_TOKEN:6662766853:AAEXDNKKTY6KQpqhrM8tIvH12HSegUM24zY}
 
 kafka:
-  producer:
-    bootstrap-servers: localhost:9092
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  vars:
+    bootstrap:
+      server: localhost:9092
+    key:
+      serializer: org.apache.kafka.common.serialization.StringSerializer
+    value:
+      serializer: org.apache.kafka.common.serialization.StringSerializer
+    groupId: registrationGroup
+    enabled: true
+    topic: registration

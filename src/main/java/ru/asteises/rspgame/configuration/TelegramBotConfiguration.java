@@ -8,17 +8,15 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.asteises.rspgame.bot.BotCore;
-import ru.asteises.rspgame.handler.CallbackHandler;
-import ru.asteises.rspgame.handler.CommandHandler;
+import ru.asteises.rspgame.producer.Producer;
 
 @Configuration
 public class TelegramBotConfiguration {
 
     @Bean
     public BotCore bot(@Value("${telegram.bot.token}") String botToken,
-                       CommandHandler commandHandler,
-                       CallbackHandler callbackHandler) {
-        return new BotCore(commandHandler, callbackHandler);
+                       Producer producer) {
+        return new BotCore(producer);
     }
 
     @Bean

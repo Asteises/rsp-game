@@ -1,7 +1,6 @@
 package ru.asteises.rspgame.bot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,25 +8,20 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.asteises.rspgame.command.StartCommand;
-import ru.asteises.rspgame.handler.CallbackHandler;
-import ru.asteises.rspgame.handler.CommandHandler;
+import ru.asteises.rspgame.producer.Producer;
 
 import java.util.List;
 
 @Slf4j
-//@RequiredArgsConstructor
 @Component
 public class BotCore extends TelegramLongPollingCommandBot {
 
-    private final CommandHandler commandHandler;
-    private final CallbackHandler callbackHandler;
-    private KafkaTemplate<String, Update> kafkaTemplate;
+    private final Producer producer;
 
     //    public BotCore(@Value("${telegram.bot.token}") String botToken) {
 
-    public BotCore(CommandHandler commandHandler, CallbackHandler callbackHandler) {
-        this.commandHandler = commandHandler;
-        this.callbackHandler = callbackHandler;
+    public BotCore(Producer producer) {
+        this.producer = producer;
 //        super(botToken);
 
         register(new StartCommand("/start", "Start command"));
@@ -66,23 +60,10 @@ public class BotCore extends TelegramLongPollingCommandBot {
     // принимать апдейты в kafka
     @Override
     public void onUpdatesReceived(List<Update> updates) {
-        for (var update : updates) {
-            updateHandle(update);
-        }
+        producer.sendMessage(updates);
     }
 
-    private void updateHandle(Update update) {
-        SendMessage result = new SendMessage();
-        if (update.hasMessage() && update.getMessage().getText().startsWith("/")) {
-            result = commandHandler.handleCommands(update);
-        } else if (update.hasCallbackQuery()) {
-            result = callbackHandler.handleCallbacks(update);
-            sendMessage(result);
-        }
-        sendMessage(result);
-    }
-
-    private void sendMessage(SendMessage sendMessage) {
+    public void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
