@@ -27,3 +27,9 @@ spring:
     defer-datasource-initialization: false
     open-in-view: false
   mandatory-file-encoding: UTF-8
+
+telegram:
+  bot:
+    token: 6524265011:AAHs7hScYcMcswKdi6YXT5JvHSxeRgCc-NI
+    name: ROCK_SCISSORS_PAPER_GAME_V2_bot
+#    token: ${BOT_TOKEN:6662766853:AAEXDNKKTY6KQpqhrM8tIvH12HSegUM24zY}
