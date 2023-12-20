@@ -8,13 +8,15 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.asteises.rspgame.bot.BotCore;
+import ru.asteises.rspgame.handler.CommandHandler;
 
 @Configuration
 public class TelegramBotConfiguration {
 
     @Bean
-    public BotCore bot(@Value("${telegram.bot.token}") String botToken) {
-        return new BotCore();
+    public BotCore bot(@Value("${telegram.bot.token}") String botToken,
+                       CommandHandler commandHandler) {
+        return new BotCore(commandHandler);
     }
 
     @Bean
