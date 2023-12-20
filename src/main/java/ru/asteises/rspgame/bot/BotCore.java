@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.asteises.rspgame.command.StartCommand;
+import ru.asteises.rspgame.handler.CallbackHandler;
 import ru.asteises.rspgame.handler.CommandHandler;
 
 import java.util.List;
@@ -18,11 +19,13 @@ import java.util.List;
 public class BotCore extends TelegramLongPollingCommandBot {
 
     private final CommandHandler commandHandler;
+    private final CallbackHandler callbackHandler;
 
     //    public BotCore(@Value("${telegram.bot.token}") String botToken) {
 
-    public BotCore(CommandHandler commandHandler) {
+    public BotCore(CommandHandler commandHandler, CallbackHandler callbackHandler) {
         this.commandHandler = commandHandler;
+        this.callbackHandler = callbackHandler;
 //        super(botToken);
 
         register(new StartCommand("/start", "Start command"));
@@ -68,8 +71,11 @@ public class BotCore extends TelegramLongPollingCommandBot {
 
     private void updateHandle(Update update) {
         SendMessage result = new SendMessage();
-        if (update.getMessage().getText().startsWith("/")) {
+        if (update.hasMessage() && update.getMessage().getText().startsWith("/")) {
             result = commandHandler.handleCommands(update);
+        } else if (update.hasCallbackQuery()) {
+            result = callbackHandler.handleCallbacks(update);
+            sendMessage(result);
         }
         sendMessage(result);
     }

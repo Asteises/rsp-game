@@ -26,7 +26,7 @@ public class Player {
     private String name;
 
     @Column(name = "chat_id")
-    private String chatId;
+    private Long chatId;
 
     @Override
     public boolean equals(Object o) {
