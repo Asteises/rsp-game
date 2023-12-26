@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public class Producer {
 
-    private final KafkaTemplate<String, PlayerDto> kafkaTemplate;
+    private final KafkaTemplate<String, Update> kafkaTemplate;
 
-    public Producer(KafkaTemplate<String, PlayerDto> kafkaTemplate) {
+    public Producer(KafkaTemplate<String, Update> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -26,10 +26,16 @@ public class Producer {
         updates.forEach(update -> {
             if (update.hasCallbackQuery()) {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
-                if (callbackQuery.getData().equals(CallbackData.REG)) {
-                    PlayerDto playerDto = PlayerMapper.INSTANCE.callbackQueryToDto(callbackQuery);
-                    kafkaTemplate.send(Topic.REGISTRATION, playerDto);
-                    log.info("Produce topic: {} and message: {}", Topic.ALL, update);
+                String data = callbackQuery.getData();
+                switch (data) {
+                    case CallbackData.REG -> {
+                        kafkaTemplate.send(Topic.REGISTRATION, update);
+                        log.info("Produce topic: {} and message: {}", Topic.ALL, update);
+                    }
+                    case CallbackData.FIND_OPPONENT -> {
+                        kafkaTemplate.send(Topic.FIND_OPPONENT, update);
+                        log.info("Produce topic: {} and message: {}", Topic.FIND_OPPONENT, update);
+                    }
                 }
             }
         });

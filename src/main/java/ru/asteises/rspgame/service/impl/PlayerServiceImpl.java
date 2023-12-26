@@ -9,6 +9,10 @@ import ru.asteises.rspgame.model.dto.PlayerDto;
 import ru.asteises.rspgame.repository.PlayerRepository;
 import ru.asteises.rspgame.service.PlayerService;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -21,5 +25,12 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = PlayerMapper.INSTANCE.toEntity(playerDto);
         playerRepository.save(player);
         return player;
+    }
+
+    @Override
+    public List<PlayerDto> getFreePlayers() {
+        List<Player> freePlayers = playerRepository.findAllByPlayingIsFalse();
+        Collections.shuffle(freePlayers);
+        return PlayerMapper.INSTANCE.toDto(freePlayers);
     }
 }

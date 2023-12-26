@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.asteises.rspgame.keyboard.RegisterKeyboard;
+import ru.asteises.rspgame.keyboard.MarkupKeyboard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
 public class CommandHandler {
 
     private final Map<String, String> commands;
-    private final RegisterKeyboard registerKeyboard;
+    private final MarkupKeyboard markupKeyboard;
 
     public CommandHandler() {
         this.commands = new HashMap<>(Map.of("/start", "StartCommand"));
-        registerKeyboard = new RegisterKeyboard();
+        markupKeyboard = new MarkupKeyboard();
     }
 
     public SendMessage handleCommands(Update update) {
@@ -27,7 +27,7 @@ public class CommandHandler {
             case "/start" -> {
                 message.setChatId(update.getMessage().getChatId());
                 message.setText("Добро пожаловать!");
-                message.setReplyMarkup(registerKeyboard.getRegisterKeyboard());
+                message.setReplyMarkup(markupKeyboard.getRegisterKeyboard());
                 return message;
             }
         }

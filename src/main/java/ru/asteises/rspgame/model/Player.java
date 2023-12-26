@@ -28,6 +28,9 @@ public class Player {
     @Column(name = "chat_id")
     private Long chatId;
 
+    @Column(name = "playing")
+    private boolean playing;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

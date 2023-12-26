@@ -14,7 +14,7 @@ public class HandlerService {
 
     private final HandlerSender sender;
 
-    private void updateHandle(Update update) {
+    public void updateHandle(Update update) {
         SendMessage result = new SendMessage();
         if (update.hasMessage() && update.getMessage().getText().startsWith("/")) {
             result = commandHandler.handleCommands(update);

@@ -7,9 +7,14 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.asteises.rspgame.keyboard.MarkupKeyboard;
 import ru.asteises.rspgame.mapper.PlayerMapper;
 import ru.asteises.rspgame.model.Player;
+import ru.asteises.rspgame.model.dto.PlayerDto;
 import ru.asteises.rspgame.service.PlayerService;
+import ru.asteises.rspgame.util.ButtonText;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +22,7 @@ import ru.asteises.rspgame.service.PlayerService;
 public class CallbackHandler {
 
     private final PlayerService playerService;
+    private final MarkupKeyboard markupKeyboard;
 
     public SendMessage handleCallbacks(Update update) {
         CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -29,19 +35,19 @@ public class CallbackHandler {
                 return result;
             }
             case "REG" -> {
-                Player player;
                 try {
-                    player = playerService.createPlayer(
+                    Player player = playerService.createPlayer(
                             PlayerMapper.INSTANCE.callbackQueryToDto(callbackQuery));
-                    result.setText("Благодарим за регистрацию");
+                    result.setText(ButtonText.THANKS);
                 } catch (DataIntegrityViolationException e) {
-                    result.setText("Такой игрок уже существует");
+                    result.setText(ButtonText.PLAYER_ALREADY_EXIST);
                 }
-//                result.setReplyMarkup(mainBoard.getMainKeyBoard());
+                result.setReplyMarkup(markupKeyboard.getMainKeyBoard());
                 result.setChatId(update.getCallbackQuery().getMessage().getChatId());
                 return result;
             }
             case "FIND_OPPONENT" -> {
+                List<PlayerDto> freePlayers = playerService.getFreePlayers();
 //                if (PlayersStorage.storage.size() == 1) {
 //                    message.setText("К сожалению, других игроков сейчас нет");
 //                    result.put(userChatId, message);

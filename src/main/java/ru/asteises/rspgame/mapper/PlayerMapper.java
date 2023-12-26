@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import ru.asteises.rspgame.model.Player;
 import ru.asteises.rspgame.model.dto.PlayerDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mapper(componentModel = "spring",
@@ -22,6 +23,8 @@ public interface PlayerMapper {
     Player toEntity(PlayerDto playerDto);
 
     PlayerDto toDto(Player player);
+
+    List<PlayerDto> toDto(List<Player> players);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "callbackQuery.from.userName")

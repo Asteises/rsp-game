@@ -16,6 +16,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.asteises.rspgame.model.dto.PlayerDto;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class KafkaProducerConfig {
     private String enabled;
 
     @Bean
-    public ProducerFactory<String, PlayerDto> producerFactory() {
+    public ProducerFactory<String, Update> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
 
         configProps.put(
@@ -52,13 +53,13 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, PlayerDto> kafkaTemplate() {
+    public KafkaTemplate<String, Update> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ConsumerFactory<String, PlayerDto> consumerFactory() {
-        JsonDeserializer<PlayerDto> deserializer = new JsonDeserializer<>(PlayerDto.class);
+    public ConsumerFactory<String, Update> consumerFactory() {
+        JsonDeserializer<Update> deserializer = new JsonDeserializer<>(Update.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
         deserializer.setUseTypeMapperForKey(true);
@@ -79,8 +80,8 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PlayerDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PlayerDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, Update> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Update> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
