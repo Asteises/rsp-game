@@ -57,9 +57,9 @@ public class BotCore extends TelegramLongPollingCommandBot {
         return super.filter(message);
     }
 
-    // принимать апдейты в kafka
     @Override
     public void onUpdatesReceived(List<Update> updates) {
+        log.info("update get 0: {}", updates.get(0));
         producer.sendMessage(updates);
     }
 

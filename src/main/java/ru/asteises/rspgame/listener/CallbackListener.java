@@ -22,6 +22,8 @@ public class CallbackListener {
     @KafkaListener(topics = Topic.ALL, groupId = "firstGroup", containerFactory = "kafkaListenerContainerFactory")
     public void listenAll(@Payload Update update, @Headers MessageHeaders headers) {
         log.info("Received update: {}", update.toString());
+        log.info("Received headers: {}", headers.toString());
+        handlerService.updateHandle(update);
     }
 
     @KafkaListener(topics = Topic.REGISTRATION, groupId = "firstGroup", containerFactory = "kafkaListenerContainerFactory")

@@ -21,9 +21,9 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @PostMapping
-    public ResponseEntity<PlayerDto> createPlayer(@RequestBody PlayerDto playerDto) {
-        Player player = playerService.createPlayer(playerDto);
-        return new ResponseEntity<>(PlayerMapper.INSTANCE.toDto(player), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<PlayerDto> createPlayer(@RequestBody PlayerDto playerDto) {
+//        Player player = playerService.createPlayer(playerDto);
+//        return new ResponseEntity<>(PlayerMapper.INSTANCE.toDto(player), HttpStatus.CREATED);
+//    }
 }

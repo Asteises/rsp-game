@@ -24,13 +24,19 @@ public class Producer {
 
     public void sendMessage(List<Update> updates) {
         updates.forEach(update -> {
+            if (update.hasMessage()) {
+                if (update.getMessage().getText().startsWith("/")) {
+                    kafkaTemplate.send(Topic.ALL, update);
+                    log.info("Produce topic: {} and message: {}", Topic.ALL, update);
+                }
+            }
             if (update.hasCallbackQuery()) {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
                 String data = callbackQuery.getData();
                 switch (data) {
                     case CallbackData.REG -> {
                         kafkaTemplate.send(Topic.REGISTRATION, update);
-                        log.info("Produce topic: {} and message: {}", Topic.ALL, update);
+                        log.info("Produce topic: {} and message: {}", Topic.REGISTRATION, update);
                     }
                     case CallbackData.FIND_OPPONENT -> {
                         kafkaTemplate.send(Topic.FIND_OPPONENT, update);

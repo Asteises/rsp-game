@@ -11,7 +11,11 @@ import ru.asteises.rspgame.service.PlayerService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,10 +31,23 @@ public class PlayerServiceImpl implements PlayerService {
         return player;
     }
 
-    @Override
-    public List<PlayerDto> getFreePlayers() {
-        List<Player> freePlayers = playerRepository.findAllByPlayingIsFalse();
+    public Map<UUID, Player> getOpponents(UUID playerId) {
+        List<Player> freePlayers = getFreePlayers();
+        Map<UUID, Player> freePlayersById = freePlayers.stream()
+                .collect(toMap(Player::getId, Function.identity()));
+        Player player = freePlayersById.get(playerId);
+        setPlayerSearchingIsOn(player);
+        return null;
+    }
+
+    public List<Player> getFreePlayers() {
+        List<Player> freePlayers = playerRepository.findAllByPlayingIsFalseAndSearchingIsFalse();
         Collections.shuffle(freePlayers);
-        return PlayerMapper.INSTANCE.toDto(freePlayers);
+        return freePlayers;
+    }
+
+    private void setPlayerSearchingIsOn(Player player) {
+        player.setSearching(true);
+        playerRepository.save(player);
     }
 }

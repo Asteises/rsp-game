@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.asteises.rspgame.model.Player;
 import ru.asteises.rspgame.util.ButtonText;
 import ru.asteises.rspgame.util.CallbackData;
 
@@ -36,13 +37,43 @@ public class MarkupKeyboard implements ReplyKeyboard {
         return keyboard;
     }
 
-    public ReplyKeyboard getMainKeyBoard() {
+    public ReplyKeyboard getMainKeyBoard(Player player) {
 
         InlineKeyboardMarkup mainKeyboard = new InlineKeyboardMarkup();
 
         InlineKeyboardButton findAnOpponentButton = new InlineKeyboardButton();
         findAnOpponentButton.setText(ButtonText.FIND_OPPONENT);
-        findAnOpponentButton.setCallbackData(CallbackData.FIND_OPPONENT);
+
+        // передаем
+        findAnOpponentButton.setCallbackData(
+                CallbackData.FIND_OPPONENT
+                        .concat(CallbackData.DELIMITER)
+                        .concat(player.getId().toString())
+        );
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(findAnOpponentButton);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row);
+        mainKeyboard.setKeyboard(rowList);
+
+        return mainKeyboard;
+    }
+
+    public ReplyKeyboard getYesOrNoKeyboard(Player player, Player opponent) {
+
+        InlineKeyboardMarkup mainKeyboard = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton findAnOpponentButton = new InlineKeyboardButton();
+        findAnOpponentButton.setText(ButtonText.FIND_OPPONENT);
+
+        // передаем
+        findAnOpponentButton.setCallbackData(
+                CallbackData.FIND_OPPONENT
+                        .concat(CallbackData.DELIMITER)
+                        .concat(player.getId().toString())
+        );
 
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(findAnOpponentButton);
