@@ -39,6 +39,7 @@ public class CallbackHandler {
             playerId = UUID.fromString(dataArray[1]);
         }
         log.info("data: {}", data);
+        log.info("playerId: {}", playerId);
         switch (data) {
             case "INFO" -> {
                 message.setText("BLA BLA BLA");
@@ -62,6 +63,11 @@ public class CallbackHandler {
             }
             case "FIND_OPPONENT" -> {
                 Map<UUID, Player> opponents = playerService.getOpponents(playerId);
+
+                for (var opponent : opponents.values()) {
+                    log.info("opponent: {}", opponent);
+                }
+
                 if (opponents.size() == 1) {
                     message.setText("К сожалению, других игроков сейчас нет");
                     message.setChatId(opponents.get(playerId).getChatId());

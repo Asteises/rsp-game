@@ -6,13 +6,15 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.asteises.rspgame.bot.BotCore;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class HandlerSender {
 
     private final BotCore botCore;
 
-    public void sendMessage(SendMessage sendMessage) {
-        botCore.sendMessage(sendMessage);
+    public void sendMessages(List<SendMessage> messages) {
+        botCore.sendMessages(messages);
     }
 }

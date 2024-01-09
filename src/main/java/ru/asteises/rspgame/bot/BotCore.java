@@ -1,6 +1,7 @@
 package ru.asteises.rspgame.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,11 +19,12 @@ public class BotCore extends TelegramLongPollingCommandBot {
 
     private final Producer producer;
 
-    //    public BotCore(@Value("${telegram.bot.token}") String botToken) {
+    public BotCore(
+            @Value("${telegram.bot.token}") String botToken,
+            Producer producer) {
 
-    public BotCore(Producer producer) {
+        super(botToken);
         this.producer = producer;
-//        super(botToken);
 
         register(new StartCommand("/start", "Start command"));
     }
@@ -30,11 +32,6 @@ public class BotCore extends TelegramLongPollingCommandBot {
     @Override
     public String getBotUsername() {
         return "ROCK-SCISSORS-PAPER-GAME";
-    }
-
-    @Override
-    public String getBotToken() {
-        return "6524265011:AAHs7hScYcMcswKdi6YXT5JvHSxeRgCc-NI";
     }
 
     @Override
@@ -60,12 +57,14 @@ public class BotCore extends TelegramLongPollingCommandBot {
     @Override
     public void onUpdatesReceived(List<Update> updates) {
         log.info("update get 0: {}", updates.get(0));
-        producer.sendMessage(updates);
+        producer.sendMessages(updates);
     }
 
-    public void sendMessage(SendMessage sendMessage) {
+    public void sendMessages(List<SendMessage> messages) {
         try {
-            execute(sendMessage);
+            for (var message : messages) {
+                execute(message);
+            }
         } catch (TelegramApiException e) {
             e.getStackTrace();
             log.error(e.getMessage());

@@ -14,9 +14,10 @@ import ru.asteises.rspgame.producer.Producer;
 public class TelegramBotConfiguration {
 
     @Bean
-    public BotCore bot(@Value("${telegram.bot.token}") String botToken,
-                       Producer producer) {
-        return new BotCore(producer);
+    public BotCore bot(
+            @Value("${telegram.bot.token}") String botToken,
+            Producer producer) {
+        return new BotCore(botToken, producer);
     }
 
     @Bean

@@ -65,18 +65,18 @@ public class MarkupKeyboard implements ReplyKeyboard {
 
         InlineKeyboardMarkup mainKeyboard = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton findAnOpponentButton = new InlineKeyboardButton();
-        findAnOpponentButton.setText(ButtonText.FIND_OPPONENT);
+        InlineKeyboardButton yesOrNoButton = new InlineKeyboardButton();
+        yesOrNoButton.setText(ButtonText.WOULD_LIKE_TO_PLAY);
 
         // передаем
-        findAnOpponentButton.setCallbackData(
-                CallbackData.FIND_OPPONENT
+        yesOrNoButton.setCallbackData(
+                CallbackData.WOULD_LIKE_TO_PLAY
                         .concat(CallbackData.DELIMITER)
                         .concat(player.getId().toString())
         );
 
         List<InlineKeyboardButton> row = new ArrayList<>();
-        row.add(findAnOpponentButton);
+        row.add(yesOrNoButton);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row);

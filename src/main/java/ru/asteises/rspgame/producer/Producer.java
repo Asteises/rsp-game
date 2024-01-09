@@ -5,8 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.asteises.rspgame.mapper.PlayerMapper;
-import ru.asteises.rspgame.model.dto.PlayerDto;
+import ru.asteises.rspgame.util.CallBackDataParser;
 import ru.asteises.rspgame.util.CallbackData;
 import ru.asteises.rspgame.util.Topic;
 
@@ -17,12 +16,14 @@ import java.util.List;
 public class Producer {
 
     private final KafkaTemplate<String, Update> kafkaTemplate;
+    private final CallBackDataParser callBackDataParser;
 
-    public Producer(KafkaTemplate<String, Update> kafkaTemplate) {
+    public Producer(KafkaTemplate<String, Update> kafkaTemplate, CallBackDataParser callBackDataParser) {
         this.kafkaTemplate = kafkaTemplate;
+        this.callBackDataParser = callBackDataParser;
     }
 
-    public void sendMessage(List<Update> updates) {
+    public void sendMessages(List<Update> updates) {
         updates.forEach(update -> {
             if (update.hasMessage()) {
                 if (update.getMessage().getText().startsWith("/")) {
@@ -32,7 +33,8 @@ public class Producer {
             }
             if (update.hasCallbackQuery()) {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
-                String data = callbackQuery.getData();
+                String data = callBackDataParser.getDataFromCallback(callbackQuery);
+
                 switch (data) {
                     case CallbackData.REG -> {
                         kafkaTemplate.send(Topic.REGISTRATION, update);

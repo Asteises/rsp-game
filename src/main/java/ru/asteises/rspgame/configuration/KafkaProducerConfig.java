@@ -17,7 +17,6 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.asteises.rspgame.model.dto.PlayerDto;
 
 import java.util.HashMap;
 import java.util.Map;

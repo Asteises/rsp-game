@@ -1,7 +1,5 @@
 package ru.asteises.rspgame.util;
 
-import org.apache.kafka.common.protocol.types.Field;
-
 public interface ButtonText {
 
     String ABOUT = "Об игре";
@@ -9,4 +7,5 @@ public interface ButtonText {
     String THANKS = "Благодарим за регистрацию";
     String PLAYER_ALREADY_EXIST = "Такой игрок уже существует";
     String FIND_OPPONENT = "Найти противника";
+    String WOULD_LIKE_TO_PLAY = "Желаете сыграть ?";
 }

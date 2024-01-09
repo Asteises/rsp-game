@@ -9,7 +9,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.asteises.rspgame.handler.HandlerService;
-import ru.asteises.rspgame.model.dto.PlayerDto;
 import ru.asteises.rspgame.util.Topic;
 
 @Slf4j
